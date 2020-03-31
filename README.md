@@ -9,7 +9,7 @@ using Selenium and JAVA to test the following:
 characters.
 6. After successful registration, verify that the user can login.
 
-
+*****Note: Can't find some Xpath for some element and some parameters need to redefine*****
 -------------------------------------------------------------------------------------------------------------
 Possible Test Scenarios of the Sign Up Page
 ---------------------------------------------
