@@ -1,1 +1,524 @@
-test
+package Atuomation-Testing-for-PHPTRAVELS;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import org.testng.asserts.Assertion;
+
+import com.beust.jcommander.Parameter;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+public class SignUpTest {
+    public static RemoteWebDriver driver = null;
+    boolean status = false;
+  
+    
+    //Setting up capabilities to run our test script
+    @Parameters(value= {"browser","version"})
+    @BeforeClass
+    public void setUp(String browser, String version) throws Exception {
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("browserName", browser);
+        capabilities.setCapability("version", version);
+        capabilities.setCapability("platform", "win10"); 
+        capabilities.setCapability("network", true); // To enable network logs
+        capabilities.setCapability("visual", true); // To enable step by step screenshot
+        capabilities.setCapability("video", true); // To enable video recording
+        capabilities.setCapability("console", true); // To capture console logs
+        try {
+            driver = new RemoteWebDriver(capabilities);
+        } catch (MalformedURLException e) {
+            System.out.println("Invalid grid URL");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+               
+    }
+    
+    //Opening browser with the given URL and navigate to Registration Page
+    @BeforeMethod
+    public void openBrowser()
+    {
+    	driver.manage().deleteAllCookies();
+    	
+		driver.get("https://www.phptravels.net/register");
+        
+        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+         
+        
+    }
+    
+ 
+   
+    // Registration with all valid data
+    @Test
+    public void validRegistrationTest(){            
+              
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedURL = "https://www.phptravels.net/account/";
+        String actualURL = driver.getCurrentUrl();
+        Assert.assertEquals(actualURL, expectedURL);
+        
+    }
+    
+    // Registration without providing First Name field
+    @Test
+    public void emptyFirstNameTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "Please fill in this field";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+    
+    // Registration without starting with Capital char in First Name field
+    @Test
+    public void InvalidFirstNameTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "Please enter first name starting with capital letter";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+       
+    // Registration without providing Last Name field
+    @Test
+    public void emptyLastNameTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "Please fill in this field";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+    
+    // Registration without starting with Capital char in Last Name field
+    @Test
+    public void InvalidLastNameTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "Please enter last name starting with capital letter";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+    
+    // Registration without providing phone number field
+    @Test
+    public void emptyPhoneTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "The phone field is required.";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+    
+    // Registration with providing invalid phone number field
+    @Test
+    public void inValidPhoneTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("16");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "Please enter a valid Phone number";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+        
+    	
+    }
+ 
+    // Registration without providing user email field
+    @Test
+    public void emptyEmailTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "Please enter your Email Address";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+    
+    // Registration with email id which already have account
+    @Test
+    public void invalidEmailTest()
+    {
+        
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        
+        String expectedErrorMsg = "This email is already registered";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+    
+    // Registration without providing password field
+    @Test
+    public void emptyPasswordTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "Please enter a password";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+    
+    // Registration with invalid password
+    @Test
+    public void inValidPasswordTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("T");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("Test@12345");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        String expectedErrorMsg = "Password should be at least 8 characters long";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    	//Password should be at least 8 characters long
+    }
+    
+    // Registration without providing Confirm Password field
+    @Test
+    public void emptyConfirmPasswordTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        
+        String expectedErrorMsg = "Please enter a Confirm password";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    }
+    
+    // Registration with invalid Confirm password
+    @Test
+    public void inValidConfirmPasswordTest()
+    {
+    	WebElement firstName = driver.findElement(By.name("firstname"));
+        firstName.sendKeys("Abdelrahman");
+             
+        WebElement lastName = driver.findElement(By.name("lastname"));
+        lastName.sendKeys("Roshdy");
+        
+        WebElement phone = driver.findElement(By.name("phone"));
+        phone.sendKeys("1112390066");
+        
+        WebElement email = driver.findElement(By.name("email"));
+        email.sendKeys("test@gmail.com");
+         
+        WebElement password = driver.findElement(By.name("password"));
+        password.sendKeys("Test@12345");
+        
+        WebElement confirmpassword = driver.findElement(By.name("confirmpassword"));
+        confirmpassword.sendKeys("T");
+ 
+        
+        WebElement signUp = driver.findElement(By.xpath("//*[@id=\"headersignupform\"]/div[8]/button"));
+        signUp.click();
+        String expectedErrorMsg = "Confirm Password must equal to password";
+        
+        WebElement exp = driver.findElement(By.xpath(""));
+        String actualErrorMsg = exp.getText();
+        		
+        Assert.assertEquals(actualErrorMsg, expectedErrorMsg);
+    	//Password should be at least 8 characters long
+    }
+  
+  
+   
+    
+    // Closing the browser session after completing each test case
+    @AfterClass
+    public void tearDown() throws Exception {
+       if (driver != null) {
+            driver.quit();
+        }
+    }
+
+}
